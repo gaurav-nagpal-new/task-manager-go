@@ -1,0 +1,18 @@
+Task Manager with some extra features
+
+Features
+1. CRUD operations - Get all tasks, Delete it, Edit it and Create it 
+2. Priority, Status, Due Dates(email/push notifications) of tasks
+3. Generate feedback weekly and send it as pdf to user at gmail(cron which runs weekly)
+4. Authentication using JWT (Use hash to store passwords) and Logout
+5. Allow users to add recurring tasks for weekly etc. 
+6. Filter to search out based on Priority/dates added 
+7. Google Calendar integration to set reminders 
+Optional - Voice Commands with AI
+
+
+Tech
+Backend - Golang 
+DB: MongoDB Atlas
+Frontend : React Js and material UI
+Swagger - For API documentation
