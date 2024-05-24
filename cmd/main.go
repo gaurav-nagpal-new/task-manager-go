@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net/http"
 	"path/filepath"
 	"task-manager/config"
@@ -27,6 +28,15 @@ func main() {
 		return
 	}
 
+	// close mongodb connection
+	defer func() {
+		if err := config.MongoClient.Disconnect(context.Background()); err != nil {
+			zap.L().Error("error closing mongodb connection", zap.Error(
+				err,
+			))
+		}
+	}()
+
 	config.InitZapLogger()
 
 	router := mux.NewRouter()
@@ -36,9 +46,9 @@ func main() {
 
 	// --------------- v1 routes start here -------------------
 	router.HandleFunc(routes.GetTasks, usecase.GetTasksHandler).Methods(http.MethodGet)
-	router.HandleFunc(routes.UpdateTasks, usecase.UpdateTasksHandler).Methods(http.MethodGet)
-	router.HandleFunc(routes.DeleteTasks, usecase.DeleteTasksHandler).Methods(http.MethodGet)
-	router.HandleFunc(routes.CreateTasks, usecase.CreateTasksHandler).Methods(http.MethodGet)
+	router.HandleFunc(routes.UpdateTasks, usecase.UpdateTasksHandler).Methods(http.MethodPut)
+	router.HandleFunc(routes.DeleteTasks, usecase.DeleteTasksHandler).Methods(http.MethodDelete)
+	router.HandleFunc(routes.CreateTasks, usecase.CreateTasksHandler).Methods(http.MethodPost)
 	// --------------- v1 routes end here ---------------------
 
 	zap.L().Debug("Starting server")
