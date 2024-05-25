@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"task-manager/config"
+	"task-manager/constants"
 	"task-manager/dto"
 	"task-manager/repository"
 	"task-manager/utils"
@@ -36,7 +37,7 @@ func UpdateTasksHandler(w http.ResponseWriter, r *http.Request) {
 
 	mongoRepo := repository.MongoRepository{
 		Client:     config.MongoClient,
-		Collection: "sample-collection",
+		Collection: r.Context().Value(constants.UserCollectionName).(string),
 	}
 
 	if err := mongoRepo.UpdateTasks(r.Context(), requestTasks); err != nil {
@@ -48,4 +49,9 @@ func UpdateTasksHandler(w http.ResponseWriter, r *http.Request) {
 		}, http.StatusInternalServerError)
 		return
 	}
+
+	utils.Response(w, &dto.GenericResponse{
+		Code:    http.StatusOK,
+		Message: "request processed successfully",
+	}, http.StatusOK)
 }

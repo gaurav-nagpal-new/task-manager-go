@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 	"task-manager/config"
+	"task-manager/constants"
 	"task-manager/dto"
 	"task-manager/repository"
+
 	"task-manager/utils"
 
 	"go.uber.org/zap"
@@ -27,7 +29,7 @@ func CreateTasksHandler(w http.ResponseWriter, r *http.Request) {
 	// call mongoDB function here to create tasks in DB and send response
 	mongoRepo := repository.MongoRepository{
 		Client:     config.MongoClient,
-		Collection: "sample-collection",
+		Collection: r.Context().Value(constants.UserCollectionName).(string),
 	}
 
 	if err := mongoRepo.CreateTasks(r.Context(), tasks.Tasks); err != nil {

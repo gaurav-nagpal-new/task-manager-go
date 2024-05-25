@@ -3,6 +3,8 @@ package utils
 import (
 	"encoding/json"
 	"net/http"
+	"regexp"
+	"strings"
 
 	"go.uber.org/zap"
 )
@@ -18,5 +20,10 @@ func Response(w http.ResponseWriter, body interface{}, code int) {
 		zap.L().Error("error encoding response body", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
+}
 
+func GetTaskCollectionName(email string) string {
+	// replace special characters with underscore
+	re := regexp.MustCompile("[^a-zA-Z0-9]+")
+	return strings.ToLower(re.ReplaceAllString(email, "_"))
 }

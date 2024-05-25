@@ -6,6 +6,7 @@ import (
 	"task-manager/constants"
 	"task-manager/dto"
 	"task-manager/model"
+	"task-manager/myerrors"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -57,7 +58,7 @@ func (m *MongoRepository) FetchTasks(ctx context.Context, status string, priorit
 		findOptions.SetSort(bson.D{{Key: constants.Priority, Value: priority}})
 	}
 
-	cursor, err := m.Client.Database(constants.TaskManagerDB).Collection("sample-collection").Find(ctx, filter, findOptions)
+	cursor, err := m.Client.Database(constants.TaskManagerDB).Collection(m.Collection).Find(ctx, filter, findOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -133,4 +134,38 @@ func (m *MongoRepository) UpdateTasks(ctx context.Context, tasks *dto.TaskCreate
 	}
 
 	return nil
+}
+
+// function to the existence of the user by email
+func (m *MongoRepository) FetchUserByEmail(ctx context.Context, email string) (*model.User, error) {
+
+	filter := bson.D{
+		{
+			Key:   "email",
+			Value: email,
+		},
+	}
+
+	var u *model.User
+	res := m.Client.Database(constants.UserDB).Collection(constants.UserCollection).FindOne(ctx, filter)
+
+	if err := res.Decode(&u); err != nil && err != mongo.ErrNoDocuments {
+		return nil, err
+	}
+
+	if res.Err() == mongo.ErrNoDocuments {
+		return nil, errors.New(myerrors.NoDocumentsErr)
+	}
+	return u, nil
+}
+
+// function to create the user
+func (m *MongoRepository) CreateUser(ctx context.Context, u *model.User) error {
+	_, err := m.Client.Database(constants.UserDB).Collection(constants.UserCollection).InsertOne(ctx, u)
+	return err
+}
+
+// function to create the collection
+func (m *MongoRepository) CreateTaskCollection(ctx context.Context, collectionName string) error {
+	return m.Client.Database(constants.TaskManagerDB).CreateCollection(ctx, collectionName)
 }

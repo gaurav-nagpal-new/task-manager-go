@@ -40,16 +40,24 @@ func main() {
 	config.InitZapLogger()
 
 	router := mux.NewRouter()
+	authRouter := router.NewRoute().Subrouter()
+	apiRouter := router.NewRoute().Subrouter()
 
-	// use middleware to log endpoint at which request is made
-	router.Use(middleware.LogEndPoint)
+	// Common middleware for logging
+	authRouter.Use(middleware.LogEndPoint)
+	apiRouter.Use(middleware.LogEndPoint, middleware.VerifyJWTAuth)
 
-	// --------------- v1 routes start here -------------------
-	router.HandleFunc(routes.GetTasks, usecase.GetTasksHandler).Methods(http.MethodGet)
-	router.HandleFunc(routes.UpdateTasks, usecase.UpdateTasksHandler).Methods(http.MethodPut)
-	router.HandleFunc(routes.DeleteTasks, usecase.DeleteTasksHandler).Methods(http.MethodDelete)
-	router.HandleFunc(routes.CreateTasks, usecase.CreateTasksHandler).Methods(http.MethodPost)
-	// --------------- v1 routes end here ---------------------
+	// --------------- v1 task routes start here -------------------
+	apiRouter.HandleFunc(routes.GetTasks, usecase.GetTasksHandler).Methods(http.MethodGet)
+	apiRouter.HandleFunc(routes.UpdateTasks, usecase.UpdateTasksHandler).Methods(http.MethodPut)
+	apiRouter.HandleFunc(routes.DeleteTasks, usecase.DeleteTasksHandler).Methods(http.MethodDelete)
+	apiRouter.HandleFunc(routes.CreateTasks, usecase.CreateTasksHandler).Methods(http.MethodPost)
+	// --------------- v1 task routes end here ---------------------
+
+	// --------------- Auth routes start here----------------
+	authRouter.HandleFunc(routes.SignUp, usecase.SignUpHandler).Methods(http.MethodPost)
+	authRouter.HandleFunc(routes.SignIn, usecase.SignInHandler).Methods(http.MethodPost)
+	// --------------- Auth routes end here ------------------
 
 	zap.L().Debug("Starting server")
 	if err := http.ListenAndServe(":8080", router); err != nil {

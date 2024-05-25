@@ -16,7 +16,7 @@ func DeleteTasksHandler(w http.ResponseWriter, r *http.Request) {
 
 	mongoRepo := repository.MongoRepository{
 		Client:     config.MongoClient,
-		Collection: "sample-collection",
+		Collection: r.Context().Value(constants.UserCollectionName).(string),
 	}
 
 	id := r.URL.Query().Get(constants.ID)

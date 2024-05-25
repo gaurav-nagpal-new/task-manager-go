@@ -3,6 +3,7 @@ package usecase
 import (
 	"net/http"
 	"task-manager/config"
+	"task-manager/constants"
 	"task-manager/dto"
 	"task-manager/model"
 	"task-manager/repository"
@@ -16,7 +17,7 @@ func GetTasksHandler(w http.ResponseWriter, r *http.Request) {
 	// Need to have some query params - created_at, priority and status
 	mongoRepo := repository.MongoRepository{
 		Client:     config.MongoClient,
-		Collection: "sample-collection",
+		Collection: r.Context().Value(constants.UserCollectionName).(string),
 	}
 
 	status := r.URL.Query().Get("status")
