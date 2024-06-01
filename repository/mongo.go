@@ -7,6 +7,7 @@ import (
 	"task-manager/dto"
 	"task-manager/model"
 	"task-manager/myerrors"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -20,10 +21,10 @@ type MongoRepository struct {
 }
 
 // function to create tasks
-func (m *MongoRepository) CreateTasks(ctx context.Context, tasks *[]model.Task) error {
+func (m *MongoRepository) CreateTasks(ctx context.Context, tasks []*model.Task) error {
 
-	documents := make([]interface{}, len(*tasks))
-	for i, task := range *tasks {
+	documents := make([]interface{}, len(tasks))
+	for i, task := range tasks {
 		documents[i] = task
 	}
 
@@ -108,7 +109,7 @@ func (m *MongoRepository) DeleteTaskFromID(ctx context.Context, id string) error
 
 func (m *MongoRepository) UpdateTasks(ctx context.Context, tasks *dto.TaskCreateRequestBody) error {
 
-	for _, task := range *tasks.Tasks {
+	for _, task := range tasks.Tasks {
 		filter := bson.D{
 			{
 				Key:   constants.MongoID,
@@ -123,7 +124,7 @@ func (m *MongoRepository) UpdateTasks(ctx context.Context, tasks *dto.TaskCreate
 					{Key: "description", Value: task.Description},
 					{Key: "priority", Value: task.Priority},
 					{Key: "status", Value: task.Status},
-					{Key: "created_at", Value: task.CreatedAt},
+					// {Key: "created_at", Value: task.CreatedAt},
 					{Key: "dead_line", Value: task.DeadLine},
 				},
 			},
@@ -168,4 +169,70 @@ func (m *MongoRepository) CreateUser(ctx context.Context, u *model.User) error {
 // function to create the collection
 func (m *MongoRepository) CreateTaskCollection(ctx context.Context, collectionName string) error {
 	return m.Client.Database(constants.TaskManagerDB).CreateCollection(ctx, collectionName)
+}
+
+// function to fetch all users data
+func (m *MongoRepository) FetchAllUsersData(ctx context.Context) ([]*model.User, error) {
+	projection := bson.D{
+		{Key: "name", Value: 1},
+		{Key: "email", Value: 1},
+		{Key: "task_collection", Value: 1},
+	}
+	cur, err := m.Client.Database(constants.UserDB).Collection(constants.UserCollection).Find(ctx, bson.D{}, options.Find().SetProjection(projection))
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	var users []*model.User
+	for cur.Next(ctx) {
+		var user *model.User
+		if err := cur.Decode(&user); err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}
+
+// function to get the tasksData in details
+func (m *MongoRepository) FetchAllTasksDetails(ctx context.Context, startTime, endTime time.Time) ([]*model.Task, error) {
+
+	filter := bson.D{
+		{
+			Key: "created_at",
+			Value: bson.D{
+				{
+					Key:   "$gte",
+					Value: startTime,
+				},
+				{
+					Key:   "$lte",
+					Value: endTime,
+				},
+			},
+		},
+	}
+
+	options := options.Find().SetSort(bson.D{{Key: "created_at", Value: -1}})
+	var result []*model.Task
+	cursor, err := m.Client.Database(constants.TaskManagerDB).Collection(m.Collection).Find(ctx, filter, options)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	for cursor.Next(ctx) {
+		var task *model.Task
+		if err := cursor.Decode(&task); err != nil {
+			return nil, err
+		}
+		result = append(result, task)
+	}
+
+	return result, nil
 }

@@ -1,18 +1,25 @@
 Task Manager with some extra features
 
 Features
-1. CRUD operations - Get all tasks, Delete it, Edit it and Create it 
-2. Priority, Status, Due Dates(email/push notifications) of tasks
-3. Generate feedback weekly and send it as pdf to user at gmail(cron which runs weekly)
-4. Authentication using JWT (Use hash to store passwords) and Logout
-5. Allow users to add recurring tasks for weekly etc. 
-6. Filter to search out based on Priority/dates added 
+1. CRUD operations - Get all tasks, Delete it, Edit it and Create it - done 
+2. Priority, Status, Due Dates of tasks - done 
+4. Authentication using JWT (Use hash to store passwords) and Logout - done 
+6. Filter to search out based on Priority/dates added - done 
+3. Generate feedback weekly and send it as pdf to user at gmail(cron which runs weekly) - May target 
+
+Need to complete this before 10thJune
+5. Email Push notifications for reminders(Need to add bool for reminder and use deadline - cron needed)
 7. Google Calendar integration to set reminders 
+8. Swagger for API documentation and also add unit tests for mongo and http functions
 Optional - Voice Commands with AI
 
+11th June to 20th June
+Study es6 first and basic css 
+Complete Frontend with React, Keep it simple
 
 Tech
 Backend - Golang 
-DB: MongoDB Atlas
+DB: MongoDB 
 Frontend : React Js and material UI
 Swagger - For API documentation
+

@@ -6,4 +6,7 @@ const (
 	UpdateTasks = "/v1/tasks/update"
 	DeleteTasks = "/v1/tasks/delete"
 	CreateTasks = "/v1/tasks/create"
+
+	// Cron API route
+	StartEmailCron = "/v1/start/cron"
 )

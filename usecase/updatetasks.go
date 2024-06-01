@@ -26,7 +26,7 @@ func UpdateTasksHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(*requestTasks.Tasks) == 0 {
+	if len(requestTasks.Tasks) == 0 {
 		zap.L().Error("nothing to update")
 		utils.Response(w, &dto.GenericResponse{
 			Code:    http.StatusBadRequest,

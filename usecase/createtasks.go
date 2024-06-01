@@ -7,6 +7,7 @@ import (
 	"task-manager/constants"
 	"task-manager/dto"
 	"task-manager/repository"
+	"time"
 
 	"task-manager/utils"
 
@@ -30,6 +31,13 @@ func CreateTasksHandler(w http.ResponseWriter, r *http.Request) {
 	mongoRepo := repository.MongoRepository{
 		Client:     config.MongoClient,
 		Collection: r.Context().Value(constants.UserCollectionName).(string),
+	}
+
+	// set createdAt
+	tasksData := tasks.Tasks
+	now := time.Now()
+	for i := 0; i < len(tasksData); i++ {
+		tasksData[i].CreatedAt = now
 	}
 
 	if err := mongoRepo.CreateTasks(r.Context(), tasks.Tasks); err != nil {

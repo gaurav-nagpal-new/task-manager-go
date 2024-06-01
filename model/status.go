@@ -6,14 +6,14 @@ import (
 )
 
 const (
-	Created    = "Created"
-	InProgress = "In Progress"
+	Todo       = "Todo"
+	InProgress = "InProgress"
 	Done       = "Done"
 )
 
 func IsValidStatus(status string) bool {
 	switch cases.Title(language.English, cases.Compact).String(status) {
-	case Created:
+	case Todo:
 		return true
 	case InProgress:
 		return true

@@ -42,10 +42,12 @@ func main() {
 	router := mux.NewRouter()
 	authRouter := router.NewRoute().Subrouter()
 	apiRouter := router.NewRoute().Subrouter()
+	publicRouter := router.NewRoute().Subrouter()
 
 	// Common middleware for logging
 	authRouter.Use(middleware.LogEndPoint)
 	apiRouter.Use(middleware.LogEndPoint, middleware.VerifyJWTAuth)
+	publicRouter.Use(middleware.LogEndPoint)
 
 	// --------------- v1 task routes start here -------------------
 	apiRouter.HandleFunc(routes.GetTasks, usecase.GetTasksHandler).Methods(http.MethodGet)
@@ -59,6 +61,11 @@ func main() {
 	authRouter.HandleFunc(routes.SignIn, usecase.SignInHandler).Methods(http.MethodPost)
 	// --------------- Auth routes end here ------------------
 
+	// --------------- Cron API starts here ---------------
+	publicRouter.HandleFunc(routes.StartEmailCron, usecase.StartEmailCronHandler).Methods(http.MethodPost)
+	// --------------- Cron API ends here --------------
+
+	// TODO: use flags package to decide the API or Cron
 	zap.L().Debug("Starting server")
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		zap.L().Debug("error starting server")

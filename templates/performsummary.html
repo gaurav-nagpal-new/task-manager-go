@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weekly Summary</title>
+    <style>
+      table {
+        width: 100%;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 3px;
+        text-align: center;
+      }
+      th {
+        background-color: bisque;
+        text-align: center;
+      }
+      .center {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hi {{.UserName}}, This is your weekly report</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>TODO</th>
+          <th>INPROGRESS</th>
+          <th>DONE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            {{range .Data}} {{if eq .Status "Todo"}}
+            <p>{{.Title}}</p>
+            {{end}} {{end}}
+          </td>
+          <td>
+            {{range .Data}} {{if eq .Status "InProgress"}}
+            <p>{{.Title}}</p>
+            {{end}} {{end}}
+          </td>
+          <td>
+            {{range .Data}} {{if eq .Status "Done"}}
+            <p>{{.Title}}</p>
+            {{end}} {{end}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 class="center">
+      Your score for the week is {{.PerformancePercentage}}%
+    </h3>
+    <p class="center">
+      Made with <span style="color: red">&#10084;</span> by Gaurav
+    </p>
+  </body>
+</html>
