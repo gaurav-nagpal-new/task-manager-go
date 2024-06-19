@@ -45,7 +45,7 @@ func CreateTasksHandler(w http.ResponseWriter, r *http.Request) {
 		utils.Response(w, &dto.GenericResponse{
 			Code:    http.StatusInternalServerError,
 			Message: http.StatusText(http.StatusInternalServerError),
-		}, http.StatusCreated)
+		}, http.StatusInternalServerError)
 		return
 	}
 

@@ -2,12 +2,12 @@ package config
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"task-manager/constants"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 )
 
 // Initialize mongoDb connection here
@@ -21,8 +21,7 @@ func InitMongoConnection() error {
 	client, err := mongo.Connect(context.Background(), opts)
 	MongoClient = client
 	if err != nil {
-		//TODO : change to Debug log using zap
-		fmt.Println("error in initializing mongodb connection")
+		zap.L().Error("error in initializing mongodb connection", zap.Error(err))
 		return err
 	}
 

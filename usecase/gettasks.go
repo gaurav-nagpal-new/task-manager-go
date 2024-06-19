@@ -28,6 +28,7 @@ func GetTasksHandler(w http.ResponseWriter, r *http.Request) {
 		if !model.IsValidStatus(r.URL.Query().Get("status")) || !model.IsValidPriority(priority) {
 			zap.L().Error("status/priority sent in query string is not valid")
 			utils.Response(w, &dto.GenericResponse{
+				Code:    http.StatusBadRequest,
 				Message: "unable to process request",
 				Error:   "status/priority is not valid",
 			}, http.StatusBadRequest)
