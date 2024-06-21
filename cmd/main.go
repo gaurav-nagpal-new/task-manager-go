@@ -1,9 +1,9 @@
+//go:generate swagger generate spec --scan-models -o ../public_docs/swagger.json
 package main
 
 import (
 	"context"
 	"net/http"
-	"path/filepath"
 	"task-manager/config"
 	"task-manager/middleware"
 	"task-manager/routes"
@@ -17,7 +17,7 @@ import (
 func main() {
 
 	// Load the .env file
-	if err := godotenv.Load(filepath.Join("..", ".env")); err != nil {
+	if err := godotenv.Load(); err != nil {
 		zap.L().Error("error loading .env file", zap.Error(err))
 		return
 	}
@@ -40,6 +40,12 @@ func main() {
 	config.InitZapLogger()
 
 	router := mux.NewRouter()
+
+	// serve swagger files
+	router.PathPrefix("/swagger/").Handler(
+		http.StripPrefix("/swagger/",
+			http.FileServer(http.Dir("public_docs/"))))
+
 	authRouter := router.NewRoute().Subrouter()
 	apiRouter := router.NewRoute().Subrouter()
 	publicRouter := router.NewRoute().Subrouter()
@@ -65,7 +71,6 @@ func main() {
 	publicRouter.HandleFunc(routes.StartEmailCron, usecase.StartEmailCronHandler).Methods(http.MethodPost)
 	// --------------- Cron API ends here --------------
 
-	// TODO: use flags package to decide the API or Cron
 	zap.L().Debug("Starting server")
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		zap.L().Debug("error starting server")

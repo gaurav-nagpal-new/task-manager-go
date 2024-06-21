@@ -12,6 +12,53 @@ import (
 )
 
 func DeleteTasksHandler(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation DELETE /tasks/delete Tasks Delete Tasks
+	// Delete Tasks
+	//
+	// Delete Tasks
+	// ---
+	// tags:
+	// - Tasks
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: id
+	//   in: query
+	//   required: true
+	//   schema:
+	//	 	type: string
+	//		example: Z34b
+	// responses:
+	//   '200':
+	//     schema:
+	//       $ref: '#/definitions/GenericResponse'
+	//   '400':
+	//     schema:
+	//       type: object
+	//       properties:
+	//         code:
+	//           type: int
+	//           example: 400
+	//         error:
+	//           type: string
+	//           example: "error decoding request body"
+	//         message:
+	//           type: string
+	//           example: "unable to process request"
+	//   '500':
+	//     schema:
+	//       type: object
+	//       properties:
+	//         code:
+	//           type: int
+	//           example: 500
+	//         error:
+	//           type: string
+	//           example: "Unable to process the request"
+	//         message:
+	//           type: string
+	//           example: "An error occurred"
+
 	// get the ID from query parameter from query string
 
 	mongoRepo := repository.MongoRepository{

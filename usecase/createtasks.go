@@ -15,6 +15,51 @@ import (
 )
 
 func CreateTasksHandler(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /tasks/create Tasks Create Tasks
+	// Create Tasks
+	//
+	// Create Tasks
+	// ---
+	// tags:
+	// - Tasks
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: tasks
+	//   in: body
+	//   required: true
+	//   schema:
+	//     $ref: '#definitions/TaskCreateRequestBody'
+	// responses:
+	//   '200':
+	//     schema:
+	//       $ref: '#/definitions/GenericResponse'
+	//   '400':
+	//     schema:
+	//       type: object
+	//       properties:
+	//         code:
+	//           type: int
+	//           example: 400
+	//         error:
+	//           type: string
+	//           example: "error decoding request body"
+	//         message:
+	//           type: string
+	//           example: "unable to process request"
+	//   '500':
+	//     schema:
+	//       type: object
+	//       properties:
+	//         code:
+	//           type: int
+	//           example: 500
+	//         error:
+	//           type: string
+	//           example: "Unable to process the request"
+	//         message:
+	//           type: string
+	//           example: "An error occurred"
 	tasks := &dto.TaskCreateRequestBody{}
 	if err := json.NewDecoder(r.Body).Decode(&tasks); err != nil {
 		zap.L().Error("error decoding request body", zap.Error(err))

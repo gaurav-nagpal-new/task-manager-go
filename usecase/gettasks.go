@@ -13,6 +13,58 @@ import (
 )
 
 func GetTasksHandler(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /tasks/get Tasks GetTasks
+	// Get Tasks
+	//
+	// Get Tasks
+	// ---
+	// tags:
+	// - Tasks
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: status
+	//   in: query
+	//   required: false
+	//   schema:
+	//     type: string
+	//     example: "InProgress"
+	// - name: priority
+	//   in: query
+	//   required: false
+	//   schema:
+	//     type: int
+	//     example: 1
+	// responses:
+	//   '200':
+	//     schema:
+	//       $ref: '#/definitions/GetTasksResponse'
+	//   '400':
+	//     schema:
+	//       type: object
+	//       properties:
+	//         code:
+	//           type: int
+	//           example: 400
+	//         error:
+	//           type: string
+	//           example: "status/priority sent in query string is not valid"
+	//         message:
+	//           type: string
+	//           example: "unable to process request"
+	//   '500':
+	//     schema:
+	//       type: object
+	//       properties:
+	//         code:
+	//           type: int
+	//           example: 500
+	//         error:
+	//           type: string
+	//           example: "Unable to process the request"
+	//         message:
+	//           type: string
+	//           example: "An error occurred"
 
 	// Need to have some query params - created_at, priority and status
 	mongoRepo := repository.MongoRepository{

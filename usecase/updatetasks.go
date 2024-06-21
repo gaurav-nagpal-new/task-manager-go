@@ -13,6 +13,51 @@ import (
 )
 
 func UpdateTasksHandler(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation PUT /tasks/update Tasks Update Tasks
+	// Update Tasks
+	//
+	// Update Tasks
+	// ---
+	// tags:
+	// - Tasks
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: tasks
+	//   in: body
+	//   required: true
+	//   schema:
+	//     $ref: '#definitions/TaskCreateRequestBody'
+	// responses:
+	//   '200':
+	//     schema:
+	//       $ref: '#/definitions/GenericResponse'
+	//   '400':
+	//     schema:
+	//       type: object
+	//       properties:
+	//         code:
+	//           type: int
+	//           example: 400
+	//         error:
+	//           type: string
+	//           example: "error decoding request body"
+	//         message:
+	//           type: string
+	//           example: "unable to process request"
+	//   '500':
+	//     schema:
+	//       type: object
+	//       properties:
+	//         code:
+	//           type: int
+	//           example: 500
+	//         error:
+	//           type: string
+	//           example: "Unable to process the request"
+	//         message:
+	//           type: string
+	//           example: "An error occurred"
 	var requestTasks *dto.TaskCreateRequestBody
 
 	// decode the request body

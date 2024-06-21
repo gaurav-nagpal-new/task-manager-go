@@ -2,6 +2,7 @@ package dto
 
 import "task-manager/model"
 
+// swagger:model
 type TaskCreateRequestBody struct {
 	Tasks []*model.Task `json:"data"`
 }
